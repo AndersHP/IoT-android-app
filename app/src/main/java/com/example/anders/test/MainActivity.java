@@ -10,8 +10,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.particle.android.sdk.cloud.ParticleCloud;
 import io.particle.android.sdk.cloud.ParticleCloudException;
@@ -25,9 +28,8 @@ import io.particle.android.sdk.utils.Toaster;
 
 public class MainActivity extends AppCompatActivity {
 
-    final private String PHOTON_URL = "https://api.particle.io/v1/devices/330042000247353138383138/lightValue?access_token=fa56b9f2d87bb78b0641e3d2c651dd80a7371df5";
-
     private Button buttonClose, buttonOpen, buttonSend, buttonWater;
+    private EditText fldAir, fldSoil;
 
     private final String particleUsername = "Anders.ahp@gmail.com";
     private final String particlePw = "34283428";
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         buttonOpen = (Button) findViewById(R.id.open);
         buttonSend = (Button) findViewById(R.id.send);
         buttonWater = (Button) findViewById(R.id.water);
+        fldAir = (EditText) findViewById(R.id.humidityFld);
+        fldSoil = (EditText) findViewById(R.id.waterFld);
 
         buttonOpen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -67,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Login to cloud when starting the app
         ParticleCloudSDK.init(getApplicationContext());
         new Thread(new Runnable() {
             @Override
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                     ParticleCloudSDK.getCloud().logIn(particleUsername,particlePw);
                     device = ParticleCloudSDK.getCloud().getDevice(deviceId);
-                    Toaster.l(thisActivity, "Logged in!, found device:" + device.getID());
+                    Toaster.s(thisActivity, "Logged in!. Found device:" + device.getID());
                 }catch (Exception e){
                     Toaster.s(thisActivity, "Logged in FAILED");
                     Log.e("LoginFail",e.getMessage());
@@ -87,7 +92,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void openWindow(){
+        callFunctionOnDevice("openWindow",null);
+    }
 
+    void closeWindow(){
+        callFunctionOnDevice("closeWindow",null);
+    }
+
+    void waterPlant(){
+        callFunctionOnDevice("waterSoil",null);
+    }
+
+    void sendDataToPhoton(){
+
+        String arg1 = fldAir.getText().toString();
+        String arg2 = fldSoil.getText().toString();
+
+        callFunctionOnDevice("updateValues",arg1 + ":" + arg2);
+    }
+
+    void callFunctionOnDevice(final String functionName, String arguments){
+
+        // Put arguments in a list for some reason?
+        final List<String> args = new ArrayList<String>();
+        args.add(0,arguments);
 
         Async.executeAsync(device, new Async.ApiWork<ParticleDevice, Integer>() {
 
@@ -95,11 +123,11 @@ public class MainActivity extends AppCompatActivity {
                     throws ParticleCloudException, IOException  {
 
                 int result = -1;
+
                 try{
-                    result = particleDevice.getIntVariable("lightValue");
-                }catch (Exception E){
-                    Toaster.l(thisActivity, "FAIL");
-                    Log.e("Yasd",E.getMessage());
+                    result = particleDevice.callFunction(functionName,args);
+                }catch (Exception e){
+                    Log.e( functionName + " call failed:",e.getMessage());
 
                 }
                 return result;
@@ -107,32 +135,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(Integer value) {
-                Toaster.s(thisActivity, "Light value is " + value);
+                Toaster.s(thisActivity, functionName + " call succeded: " + value);
             }
 
             @Override
             public void onFailure(ParticleCloudException e) {
-                Log.e("some tag", "Something went wrong making an SDK call: ", e);
-                Toaster.l(thisActivity, "Uh oh, something went wrong.");
+                Log.e( functionName + " call failed:",e.getMessage());
+                Toaster.l(thisActivity, functionName + " call failed");
             }
         });
-    }
 
-    void closeWindow(){
-
-    }
-
-    void sendDataToPhoton(){
-
-    }
-
-    void waterPlant(){
-
-    }
-
-    void sendHttpRequest(String requestType, String airHumidity, String soilHumidity){
-
-        // DO!:
-    
     }
 }
