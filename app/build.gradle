@@ -3,6 +3,9 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
+    }
     defaultConfig {
         applicationId "com.example.anders.test"
         minSdkVersion 15
@@ -16,6 +19,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            debuggable true
+        }
     }
 }
 
@@ -26,6 +32,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'io.particle:cloudsdk:0.4.3'
     //compile 'org.apache.httpcomponents:httpcore:4.4.1'
     //compile 'org.apache.httpcomponents:httpclient:4.5'
     testCompile 'junit:junit:4.12'

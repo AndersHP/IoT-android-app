@@ -11,31 +11,128 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="374dp"
         android:layout_height="243dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/constraintLayout2"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.285">
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent">
 
-        <View
-            android:id="@+id/view"
-            android:layout_width="600dp"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="0dp" />
+        <EditText
+            android:id="@+id/editText5"
+            android:layout_width="89dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginTop="16dp"
+            android:background="@null"
+
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Luft %"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editText11"
+            android:layout_width="89dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginTop="56dp"
+            android:background="@null"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Luft %"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editText12"
+            android:layout_width="89dp"
+            android:layout_height="32dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="64dp"
+            android:layout_marginTop="96dp"
+            android:background="@null"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Luft %"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.084" />
+
+        <EditText
+            android:id="@+id/editText3"
+            android:layout_width="88dp"
+            android:layout_height="32dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:background="@null"
+            android:ems="10"
+            android:inputType="none"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toRightOf="@+id/editText5" />
+
+        <EditText
+            android:id="@+id/editText9"
+            android:layout_width="88dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@null"
+            android:layout_marginTop="8dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:ems="10"
+            android:inputType="none"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText3"
+            app:layout_constraintLeft_toRightOf="@+id/editText11" />
+
+        <EditText
+            android:id="@+id/editText10"
+            android:layout_width="88dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@null"
+            android:layout_marginTop="8dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:ems="10"
+            android:inputType="none"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText9"
+            app:layout_constraintLeft_toRightOf="@+id/editText12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintVertical_bias="0.084" />
 
         <Button
             android:id="@+id/water"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="8dp"
             android:text="Vand"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
             app:layout_constraintVertical_bias="1.0" />
 
         <Button
@@ -44,10 +141,12 @@
             android:layout_height="wrap_content"
             android:text="Luk"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/open"
-            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.497" />
+            app:layout_constraintVertical_bias="0.955"
+            app:layout_constraintRight_toLeftOf="@+id/water"
+            android:layout_marginRight="29dp" />
 
         <Button
             android:id="@+id/open"
@@ -55,19 +154,26 @@
             android:layout_height="wrap_content"
             android:text="Åben"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/close"
+            android:layout_marginBottom="13dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.497" />
+            android:layout_marginTop="8dp"
+            app:layout_constraintVertical_bias="0.982"
+            app:layout_constraintRight_toLeftOf="@+id/close"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="374dp"
         android:layout_height="251dp"
-        tools:layout_editor_absoluteY="-5dp"
+        android:id="@+id/constraintLayout"
+        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.428">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent">
 
         <EditText
             android:id="@+id/waterFld"
@@ -77,6 +183,7 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="Vand?"
+            android:inputType="number"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintLeft_toLeftOf="parent"
