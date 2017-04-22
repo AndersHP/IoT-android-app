@@ -29,7 +29,7 @@ import io.particle.android.sdk.utils.Toaster;
 public class MainActivity extends AppCompatActivity {
 
     private Button buttonClose, buttonOpen, buttonSend, buttonWater;
-    private EditText fldAir, fldSoil;
+    private EditText fldAir, fldSoil, currentAirFld, currentSoilFld, currentTempFld;
 
     private final String particleUsername = "Anders.ahp@gmail.com";
     private final String particlePw = "34283428";
@@ -37,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
     Activity thisActivity = this;
     private ParticleDevice device;
+
+    private int currentAirHumidity = -1;
+    private int currentSoilHumidity = -1;
+    private int currentTemp = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         buttonWater = (Button) findViewById(R.id.water);
         fldAir = (EditText) findViewById(R.id.humidityFld);
         fldSoil = (EditText) findViewById(R.id.waterFld);
+        currentAirFld = (EditText) findViewById(R.id.currentAirFld);
+        currentSoilFld = (EditText) findViewById(R.id.currentSoilFld);
+        currentTempFld = (EditText) findViewById(R.id.currentTempFld);
 
         buttonOpen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -100,11 +107,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void waterPlant(){
-        callFunctionOnDevice("waterSoil",null);
+        getCurrentValues();
+       // callFunctionOnDevice("waterSoil",null);
     }
 
     void sendDataToPhoton(){
-
         String arg1 = fldAir.getText().toString();
         String arg2 = fldSoil.getText().toString();
 
@@ -145,5 +152,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    void getCurrentValues(){
+        Async.executeAsync(device, new Async.ApiWork<ParticleDevice, Integer>() {
+
+            public Integer callApi(ParticleDevice particleDevice)
+                    throws ParticleCloudException, IOException  {
+
+                try{
+                    currentAirHumidity = particleDevice.getIntVariable("currAirHum");
+                    currentSoilHumidity = particleDevice.getIntVariable("currSoilHum");
+                    currentTemp = particleDevice.getIntVariable("currAirHum");
+
+                }catch (Exception e){
+                    Log.e( "Failed to retrieve:",e.getMessage());
+
+                }
+                return 1;
+            }
+
+            @Override
+            public void onSuccess(Integer value) {
+                currentAirFld.setText("" + currentAirHumidity);
+                currentSoilFld.setText("" + currentSoilHumidity);
+                currentTempFld.setText("" + currentTemp);
+                Toaster.s(thisActivity, "Current values retrieved!");
+            }
+
+            @Override
+            public void onFailure(ParticleCloudException e) {
+                Log.e( "get vars failed:",e.getMessage());
+                Toaster.l(thisActivity, "failed to get current values!");
+            }
+        });
     }
 }
