@@ -1,5 +1,8 @@
 // This #include statement was automatically added by the Particle IDE.
-#include "AM2302.h"
+#include <Adafruit_DHT.h>
+
+// This #include statement was automatically added by the Particle IDE.
+//#include "AM2302.h"
 
 // This #include statement was automatically added by the Particle IDE.
 //#include <Adafruit_AM2315.h>
@@ -21,7 +24,8 @@ float humidity;
 
 // DHT sensor
 //DHT dht(DHTPIN, DHTTYPE);
-AM2302 am2302(D5);
+DHT dht(D5, AM2301);
+//AM2302 am2302(D4, D4);
 
 Servo myServo;
 
@@ -76,18 +80,20 @@ void setup()
 	Particle.function("analogwrite", tinkerAnalogWrite);
 	
     // Start DHT sensor
-    //dht.begin();
-    am2302.begin();
+    dht.begin();
+    //am2302.begin();
 }
 
 /* This function loops forever --------------------------------------------*/
 void loop()
 {
+    
     // Temperature and humidity measurement
-    //temperature = dht.getTempCelcius();
-    if(am2302.readTemperatureAndHumidity(temperature, humidity)) {
+    temperature = dht.getTempCelcius();
+    //if(am2302.readTemperatureAndHumidity(temperature, humidity)) {
     
         // Humidity measurement
+    humidity = dht.getHumidity();
         //humidity = am2302.readHumidity();
         
         // Light level measurement
@@ -99,11 +105,11 @@ void loop()
         Particle.publish("humidity", String(humidity) + "%");
         //Spark.publish("light", String(light) + "%");
         //delay(2000);
-    }
-    else {
-        Particle.publish("Failed to read temperature/humidity! ");
-    }
-    delay(2100);
+    //}
+    //else {
+    //    Particle.publish("Failed to read temperature/humidity! ");
+    //}
+    delay(10000);
 }
 
 /*******************************************************************************
