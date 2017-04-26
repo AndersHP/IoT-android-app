@@ -81,18 +81,32 @@ bool AM2302::parityCorrect(uint8_t reply[5]) {
 
 int AM2302::waitForHigh(int limitMicroSec) {
     int totalDelay = 0;
+    unsigned long start = micros();
     while(pinReadFast(pin) != HIGH && totalDelay <= limitMicroSec) {
         delayMicroseconds(1);
-        totalDelay += 1;
+        unsigned long end = micros();
+        if(start > end) {
+            totalDelay = (int)(end + (35791394 - start));
+        }
+        else {
+            totalDelay = (int)(end - start);
+        }
     }
     return totalDelay;
 }
 
 int AM2302::waitForLow(int limitMicroSec) {
     int totalDelay = 0;
+    unsigned long start = micros();
     while(pinReadFast(pin) != LOW && totalDelay <= limitMicroSec) {
         delayMicroseconds(1);
-        totalDelay += 1;
+        unsigned long end = micros();
+        if(start > end) {
+            totalDelay = (int)(end + (35791394 - start));
+        }
+        else {
+            totalDelay = (int)(end - start);
+        }
     }
     return totalDelay;
 }
@@ -102,7 +116,7 @@ uint8_t AM2302::readBit(void) {
     waitForHigh(55); 
     discriminatingDelay = waitForLow(75); 
     
-    if(discriminatingDelay > 50) {
+    if(discriminatingDelay > 60) {
         return 1;
     }
     else {
