@@ -2,7 +2,7 @@
 	
 class AM2302 {
  public:
-  AM2302(int pin);
+  AM2302(int pinSend, int pinReceive);
   bool begin(void);
   float readTemperature(void);
   float readHumidity(void);
@@ -16,5 +16,6 @@ class AM2302 {
   uint8_t readBit(void);
   uint8_t readByte(void);
   float humidity, temp;
-  int pin;
+  int pinSend;
+  int pinReceive;
 };
