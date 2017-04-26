@@ -16,55 +16,55 @@ bool AM2302::begin() {
 }
 
 bool AM2302::readData(void) {
-  uint8_t reply[5];
+    uint8_t reply[5];
 
-  // Signal data request
-  pinResetFast(pin);
-  delay(2);
-  pinSetFast(pin);
-  
-  // Wait for reply preamble
-  waitForLow(200); // Response to low
-  waitForHigh(85); // Response to high
-  waitForLow(85); // Prepare to receive data
-  
-  // Receive data
-  for (uint8_t i=0; i<5; i++) {
-    reply[i] = readByte();
-    Particle.publish("Read Byte: ", reply[i]);
-  }
-  
-  waitForHigh(55); // End of transmission
+    // Signal data request
+    pinResetFast(pin);
+    delay(2);
+    pinSetFast(pin);
+      
+    // Wait for reply preamble
+    waitForLow(200); // Response to low
+    waitForHigh(85); // Response to high
+    waitForLow(85); // Prepare to receive data
+      
+    // Receive data
+    for (uint8_t i=0; i<5; i++) {
+        reply[i] = readByte();
+    }
+      
+    waitForHigh(55); // End of transmission
 
-  if (!parityCorrect(reply)) {
-    Particle.publish("Bad parity!");
-    return false;
-  }
+    if (!parityCorrect(reply)) {
+        Particle.publish("Bad parity!");
+        return false;
+    }
+    Particle.publish("Parity OK");
 
-  humidity = reply[0];
-  humidity *= 256;
-  humidity += reply[1];
-  humidity /= 10;
-  Particle.publish("H", humidity);
+    humidity = reply[0];
+    humidity *= 256;
+    humidity += reply[1];
+    humidity /= 10;
+    Particle.publish("H", humidity);
 
-  temp = reply[2];
-  temp *= 256;
-  temp += reply[3];
-  temp /= 10;
-  Particle.publish("T", temp);
+    temp = reply[2];
+    temp *= 256;
+    temp += reply[3];
+    temp /= 10;
+    Particle.publish("T", temp);
 
-  return true;
+    return true;
 }
 
 
 float AM2302::readTemperature(void) {
-  if (! readData()) return 0;
-  return temp;
+    if (! readData()) return 0;
+    return temp;
 }
 
 float AM2302::readHumidity(void) {
-  if (! readData()) return 0;
-  return humidity;
+    if (! readData()) return 0;
+    return humidity;
 }
 
 bool AM2302::parityCorrect(uint8_t reply[5]) {
