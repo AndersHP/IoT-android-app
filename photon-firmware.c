@@ -1,3 +1,21 @@
+// This #include statement was automatically added by the Particle IDE.
+#include <Adafruit_DHT.h>
+
+// DHT parameters
+#define DHTPIN 5
+#define DHTTYPE DHT11
+
+// Variables
+int temperature;
+int humidity;
+int light;
+
+// Pins
+int light_sensor_pin = A0;
+
+// DHT sensor
+DHT dht(DHTPIN, DHTTYPE);
+
 Servo myServo;
 
 int pos = 0;
@@ -49,13 +67,33 @@ void setup()
 	Particle.function("digitalwrite", tinkerDigitalWrite);
 	Particle.function("analogread", tinkerAnalogRead);
 	Particle.function("analogwrite", tinkerAnalogWrite);
+	
+    // Start DHT sensor
+    dht.begin();
 
 }
 
 /* This function loops forever --------------------------------------------*/
 void loop()
 {
-	//This will run in a loop
+    // Humidity measurement
+    temperature = dht.getTempCelcius();
+    
+    // Humidity measurement
+    humidity = dht.getHumidity();
+    
+    // Light level measurement
+    float light_measurement = analogRead(light_sensor_pin);
+    light = (int)(light_measurement/4096*100);
+    
+    // Publish data
+    Spark.publish("temperature", String(temperature) + " °C");
+    delay(2000);
+    Spark.publish("humidity", String(humidity) + "%");
+    delay(2000);
+    Spark.publish("light", String(light) + "%");
+    delay(2000);
+    
 }
 
 /*******************************************************************************
