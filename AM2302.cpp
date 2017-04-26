@@ -68,9 +68,10 @@ float AM2302::readHumidity(void) {
 }
 
 bool AM2302::parityCorrect(uint8_t reply[5]) {
-    int h = reply[0] * 256 + reply[1], t = reply[2] * 256 + reply[3], parity = reply[4];
+    int parity = reply[4];
     
-    if(h + t == parity) {
+    Particle.publish("Parity: ", " (" + String(reply[0]) + ", " + String(reply[1]) + ", " + String(reply[2]) + ", " + String(reply[3]) + ", " + String(reply[4]) + ")");
+    if(reply[0] + reply[1] + reply[2] + reply[3] == parity) {
         return true;
     }
     else {
