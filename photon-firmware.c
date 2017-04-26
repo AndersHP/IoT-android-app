@@ -12,8 +12,8 @@
 //#define DHTTYPE DHT11
 
 // Variables
-int temperature;
-int humidity;
+float temperature;
+float humidity;
 //int light;
 
 // Pins
@@ -83,25 +83,27 @@ void setup()
 /* This function loops forever --------------------------------------------*/
 void loop()
 {
-    // Temperature measurement
+    // Temperature and humidity measurement
     //temperature = dht.getTempCelcius();
-    temperature = am2302.readTemperature();
+    if(am2302.readTemperatureAndHumidity(temperature, humidity)) {
     
-    // Humidity measurement
-    humidity = am2302.readHumidity();
-    
-    // Light level measurement
- //   float light_measurement = analogRead(light_sensor_pin);
- //   light = (int)(light_measurement/4096*100);
-    
-    // Publish data
-    Particle.publish("temperature", String(temperature) + " °C");
-    delay(2000);
-    Particle.publish("humidity", String(humidity) + "%");
-    delay(2000);
-//    Spark.publish("light", String(light) + "%");
-//    delay(2000);
-    
+        // Humidity measurement
+        //humidity = am2302.readHumidity();
+        
+        // Light level measurement
+        //float light_measurement = analogRead(light_sensor_pin);
+        //light = (int)(light_measurement/4096*100);
+        
+        // Publish data
+        Particle.publish("temperature", String(temperature) + " °C");
+        Particle.publish("humidity", String(humidity) + "%");
+        //Spark.publish("light", String(light) + "%");
+        //delay(2000);
+    }
+    else {
+        Particle.publish("Failed to read temperature/humidity! ");
+    }
+    delay(2100);
 }
 
 /*******************************************************************************
