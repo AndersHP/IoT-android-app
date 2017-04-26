@@ -4,13 +4,14 @@
 #endif
 
 
-AM2302::AM2302(int pin) {
-    this->pin = pin;
+AM2302::AM2302(int pinSend, int pinReceive) {
+    this->pinSend = pinSend;
+    this->pinReceive = pinReceive;
 }
 
 
 bool AM2302::begin() {
-    pinSetFast(pin);
+    pinSetFast(pinSend);
     // try to read data, as a test
     return readData();
 }
@@ -19,9 +20,9 @@ bool AM2302::readData(void) {
     uint8_t reply[5];
 
     // Signal data request
-    pinResetFast(pin);
+    pinResetFast(pinSend);
     delay(2);
-    pinSetFast(pin);
+    pinSetFast(pinSend);
       
     // Wait for reply preamble
     waitForLow(200); // Response to low
@@ -39,19 +40,19 @@ bool AM2302::readData(void) {
         Particle.publish("Bad parity!");
         return false;
     }
-    Particle.publish("Parity OK");
+    //Particle.publish("Parity OK");
 
     humidity = reply[0];
     humidity *= 256;
     humidity += reply[1];
     humidity /= 10;
-    Particle.publish("H", humidity);
+    //Particle.publish("H", humidity);
 
     temp = reply[2];
     temp *= 256;
     temp += reply[3];
     temp /= 10;
-    Particle.publish("T", temp);
+    //Particle.publish("T", temp);
 
     return true;
 }
@@ -70,7 +71,7 @@ float AM2302::readHumidity(void) {
 bool AM2302::parityCorrect(uint8_t reply[5]) {
     int parity = reply[4];
     
-    Particle.publish("Parity: ", " (" + String(reply[0]) + ", " + String(reply[1]) + ", " + String(reply[2]) + ", " + String(reply[3]) + ", " + String(reply[4]) + ")");
+    //Particle.publish("Parity: ", " (" + String(reply[0]) + ", " + String(reply[1]) + ", " + String(reply[2]) + ", " + String(reply[3]) + ", (" + String(reply[0] + reply[1] + reply[2] + reply[3]) + "), " + String(reply[4]) + ")");
     if(reply[0] + reply[1] + reply[2] + reply[3] == parity) {
         return true;
     }
@@ -82,7 +83,7 @@ bool AM2302::parityCorrect(uint8_t reply[5]) {
 int AM2302::waitForHigh(int limitMicroSec) {
     int totalDelay = 0;
     unsigned long start = micros();
-    while(pinReadFast(pin) != HIGH && totalDelay <= limitMicroSec) {
+    while(pinReadFast(pinReceive) != HIGH && totalDelay <= limitMicroSec) {
         delayMicroseconds(1);
         unsigned long end = micros();
         if(start > end) {
@@ -92,13 +93,19 @@ int AM2302::waitForHigh(int limitMicroSec) {
             totalDelay = (int)(end - start);
         }
     }
+    //if(pinReadFast(pin) == HIGH) {
+    //    Particle.publish("Went HIGH: " + String(totalDelay) + " / " + String(limitMicroSec));
+    //}
+    //else {
+    //    Particle.publish("NOT HIGH! " + String(totalDelay) + " / " + String(limitMicroSec));
+    //}
     return totalDelay;
 }
 
 int AM2302::waitForLow(int limitMicroSec) {
     int totalDelay = 0;
     unsigned long start = micros();
-    while(pinReadFast(pin) != LOW && totalDelay <= limitMicroSec) {
+    while(pinReadFast(pinReceive) != LOW && totalDelay <= limitMicroSec) {
         delayMicroseconds(1);
         unsigned long end = micros();
         if(start > end) {
@@ -108,6 +115,12 @@ int AM2302::waitForLow(int limitMicroSec) {
             totalDelay = (int)(end - start);
         }
     }
+    //if(pinReadFast(pin) == LOW) {
+    //    Particle.publish("Went LOW: " + String(totalDelay) + " / " + String(limitMicroSec));
+    //}
+    //else {
+    //    Particle.publish("NOT LOW! " + String(totalDelay) + " / " + String(limitMicroSec));
+    //}
     return totalDelay;
 }
 
@@ -115,7 +128,6 @@ uint8_t AM2302::readBit(void) {
     int discriminatingDelay;
     waitForHigh(55); 
     discriminatingDelay = waitForLow(75); 
-    
     if(discriminatingDelay > 60) {
         return 1;
     }
