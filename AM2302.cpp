@@ -31,13 +31,13 @@ bool AM2302::readData(void) {
   // Receive data
   for (uint8_t i=0; i<5; i++) {
     reply[i] = readByte();
-    //Serial.println(reply[i], HEX);
+    Particle.publish("Read Byte: ", reply[i]);
   }
   
   waitForHigh(55); // End of transmission
 
   if (!parityCorrect(reply)) {
-    Serial.print("Bad parity!");
+    Particle.publish("Bad parity!");
     return false;
   }
 
@@ -45,13 +45,13 @@ bool AM2302::readData(void) {
   humidity *= 256;
   humidity += reply[1];
   humidity /= 10;
-  Serial.print("H"); Serial.println(humidity);
+  Particle.publish("H", humidity);
 
   temp = reply[2];
   temp *= 256;
   temp += reply[3];
   temp /= 10;
-  Serial.print("T"); Serial.println(temp);
+  Particle.publish("T", temp);
 
   return true;
 }
