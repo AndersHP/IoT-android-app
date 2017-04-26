@@ -95,9 +95,9 @@ void loop()
  //   light = (int)(light_measurement/4096*100);
     
     // Publish data
-    Spark.publish("temperature", String(temperature) + " °C");
+    Particle.publish("temperature", String(temperature) + " °C");
     delay(2000);
-    Spark.publish("humidity", String(humidity) + "%");
+    Particle.publish("humidity", String(humidity) + "%");
     delay(2000);
 //    Spark.publish("light", String(light) + "%");
 //    delay(2000);
