@@ -15,8 +15,8 @@
 //#define DHTTYPE DHT11
 
 // Variables
-float temperature;
-float humidity;
+double temperature;
+double humidity;
 //int light;
 
 // Pins
@@ -66,6 +66,8 @@ void setup()
     myServo.attach(A4);
 
     Particle.variable("GetServo", &pos, INT);
+    Particle.variable("GetTemp", &temperature, DOUBLE);
+    Particle.variable("GetHumidity", &humidity, DOUBLE);
     Particle.function("SetServoWeb", setServo);
     setServo("40");
     //// Uncomment for extra experiment with Distance sensor
