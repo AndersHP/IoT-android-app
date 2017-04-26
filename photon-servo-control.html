@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <title>Photon Servo Control</title>
+	  <link href='https://fonts.googleapis.com/css?family=Maven+Pro' rel='stylesheet' type='text/css'>
+    <style>
+    body {
+      margin: 1em auto;
+      max-width: 45em;
+      padding: 0.8em;
+      background: white;
+	  font-family: 'Maven Pro', sans-serif;
+      font-size: 14px;
+    }
+    </style>
+  </head>
+  <body>
+    <h1>Photon servo control</h1>
+    Alexanders Photon: <input type="range" min="40" max="150" value="0" onchange="showValue(this.value, '340028000347343337373738', '99ee12a971005fe2c2cac931c659c56a5ba64a77')"/>
+    <span id="range">0</span>
+    <script type="text/javascript">
+    function showValue(newValue, dev_id, access_token) {
+      document.getElementById("range").innerHTML=newValue;
+      var request = new XMLHttpRequest();
+      var data = 'params='+newValue+'&access_token='+access_token;
+      var url = 'https://api.particle.io/v1/devices/'+dev_id+'/SetServoWeb/';
+      request.open('POST', url, true);
+      request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+      request.send(data);
+    }
+    </script>
+  </body>
+</html>
