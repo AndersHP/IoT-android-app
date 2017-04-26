@@ -1,20 +1,27 @@
 // This #include statement was automatically added by the Particle IDE.
-#include <Adafruit_DHT.h>
+#include "AM2302.h"
+
+// This #include statement was automatically added by the Particle IDE.
+//#include <Adafruit_AM2315.h>
+
+// This #include statement was automatically added by the Particle IDE.
+//#include <Adafruit_DHT.h>
 
 // DHT parameters
-#define DHTPIN 5
-#define DHTTYPE DHT11
+//#define DHTPIN 5
+//#define DHTTYPE DHT11
 
 // Variables
 int temperature;
 int humidity;
-int light;
+//int light;
 
 // Pins
-int light_sensor_pin = A0;
+//int light_sensor_pin = A0;
 
 // DHT sensor
-DHT dht(DHTPIN, DHTTYPE);
+//DHT dht(DHTPIN, DHTTYPE);
+AM2302 am2302(D5);
 
 Servo myServo;
 
@@ -69,30 +76,31 @@ void setup()
 	Particle.function("analogwrite", tinkerAnalogWrite);
 	
     // Start DHT sensor
-    dht.begin();
-
+    //dht.begin();
+    am2302.begin();
 }
 
 /* This function loops forever --------------------------------------------*/
 void loop()
 {
-    // Humidity measurement
-    temperature = dht.getTempCelcius();
+    // Temperature measurement
+    //temperature = dht.getTempCelcius();
+    temperature = am2302.readTemperature();
     
     // Humidity measurement
-    humidity = dht.getHumidity();
+    humidity = am2302.readHumidity();
     
     // Light level measurement
-    float light_measurement = analogRead(light_sensor_pin);
-    light = (int)(light_measurement/4096*100);
+ //   float light_measurement = analogRead(light_sensor_pin);
+ //   light = (int)(light_measurement/4096*100);
     
     // Publish data
     Spark.publish("temperature", String(temperature) + " °C");
     delay(2000);
     Spark.publish("humidity", String(humidity) + "%");
     delay(2000);
-    Spark.publish("light", String(light) + "%");
-    delay(2000);
+//    Spark.publish("light", String(light) + "%");
+//    delay(2000);
     
 }
 
