@@ -8,6 +8,15 @@
 // This #include statement was automatically added by the Particle IDE.
 #include <Adafruit_DHT.h>
 
+#include "Controller.h"
+
+// LED parameters
+#define LEDPIN D7
+
+// Actuator parameters
+#define ACTUATORPIN A4
+
+// Light parameters
 #define LIGHTPIN_IN A0
 #define LIGHTPIN_POWER A5
 
@@ -15,74 +24,140 @@
 #define DHTPIN D5
 #define DHTTYPE AM2301
 
-// Variables
+// Sensor Input Variables
 double temperature;
-double humidity;
+double airHumidity;
+double soilHumidity;
 int light;
 
-// Pins
-//int light_sensor_pin = A0;
+// Outputs
+int ventilation = 0;
+int irrigation = 0;
 
 // DHT sensor
-//DHT dht(DHTPIN, DHTTYPE);
 DHT dht(DHTPIN, DHTTYPE);
-//AM2302 am2302(D4, D4);
 
+// Ventilation Actuator
 Servo myServo;
 
-int pos = 0;
+// Water Flow Controller
+// TODO implement hardware reader
 
-int setServo(String command) {
-   pos = command.toInt();
-   myServo.write(pos);
-   Particle.publish("Servo Position: %i *\n", pos);
+// App Logic Controller
+Controller controller;
+
+
+void setVentilationPercentage(int percentage) {
+   ventilation = percentage;
+   if(ventilation > 100) {
+     ventilation = 100;
+   }
+   else if(ventilation < 0) {
+     ventilation = 0;
+   }
+   myServo.write(ventilation + 40);
+   Particle.publish("Ventilation: %i%% \n", ventilation);
+}
+
+void setIrrigationPercentage(int percentage) {
+   irrigation = percentage;
+   if(irrigation > 100) {
+     irrigation = 100;
+   }
+   else if(irrigation < 0) {
+     irrigation = 0;
+   }
+  // TODO implement irrigation
+  Particle.publish("Irrigation: %i%% \n", irrigation);
+}
+
+int setOpening(String command) {
+   setVentilationPercentage(command.toInt());
    blinkLed();
-   return pos;
+   return ventilation;
 }
 
 void blinkLed() {
-   digitalWrite(D7,HIGH);
+   digitalWrite(LEDPIN,HIGH);
    delay(150);
-   digitalWrite(D7,LOW);
+   digitalWrite(LEDPIN,LOW);
 }
 
-//// Uncomment for extra experiment with Distance sensor
-//void setServoBySonar(const char *event, const char *data) {
-//    if (data) {
-//        setServo(data);
-//    }
-//}
+int lightValue() {
+  return (int)(analogRead(LIGHTPIN_IN) / 40.96);
+}
+
+double next(String configuration, String separator, int& lastPos) {
+  double value;
+  int pos = configuration.indexOf(separator, lastPos);
+  value = (double)configuration.substring(lastPos, pos).toFloat();
+  lastPos = pos + separator.length();
+  return value;
+}
+
+int configure(String configuration) {
+  String separator = ":";
+  int lastPos = 0;
+  double dayAirHumidity;
+  double daySoilHumidity;
+  double dayTemperature;
+  double nightAirHumidity;
+  double nightSoilHumidity;
+  double nightTemperature;
+
+  dayAirHumidity = next(configuration, separator, lastPos);
+  daySoilHumidity = next(configuration, separator, lastPos);
+  dayTemperature = next(configuration, separator, lastPos);
+  nightAirHumidity = next(configuration, separator, lastPos);
+  nightSoilHumidity = next(configuration, separator, lastPos);
+  nightTemperature = next(configuration, separator, lastPos);
+
+  controller.setDesiredDayAirHumidity(dayAirHumidity);
+  controller.setDesiredDaySoilHumidity(daySoilHumidity);
+  controller.setDesiredDayTemperature(dayTemperature);
+  controller.setDesiredNightAirHumidity(nightAirHumidity);
+  controller.setDesiredNightSoilHumidity(nightSoilHumidity);
+  controller.setDesiredNightTemperature(nightTemperature);
+
+  return 0;
+}
 
 /* Function prototypes -------------------------------------------------------*/
 int tinkerDigitalRead(String pin);
 int tinkerDigitalWrite(String command);
 int tinkerAnalogRead(String pin);
 int tinkerAnalogWrite(String command);
-int lightValue();
 
 /* This function is called once at start up ----------------------------------*/
 void setup()
 {
   Serial.begin(9600);
-  pinMode(D7, OUTPUT);
-  myServo.attach(A4);
 
+  // Setup LED
+  pinMode(LEDPIN, OUTPUT);
+
+  // Setup Actuator
+  myServo.attach(ACTUATORPIN);
+
+  // Setup Light Sensor
   pinMode(LIGHTPIN_IN,INPUT);
   pinMode(LIGHTPIN_POWER,OUTPUT);
-  // Next, write one pin of the photoresistor to be the maximum possible, so that we can use this for power.
+  // Next, write one pin of the photoresistor to be the maximum possible,
+  // so that we can use this for power.
   digitalWrite(LIGHTPIN_POWER,HIGH);
 
-  Particle.variable("GetServo", &pos, INT);
+  Particle.variable("GetOpening", &ventilation, INT);
   Particle.variable("GetTemp", &temperature, DOUBLE);
-  Particle.variable("GetHumidity", &humidity, DOUBLE);
+  Particle.variable("GetHumidity", &airHumidity, DOUBLE);
+  Particle.variable("GetSoil", &soilHumidity, DOUBLE);
   Particle.variable("GetLight", &light, INT);
-  Particle.function("SetServoWeb", setServo);
-  setServo("40");
-  //// Uncomment for extra experiment with Distance sensor
-  //Particle.subscribe("SetServoSon", setServoBySonar);
+  Particle.function("SetOpening", setOpening);
+  Particle.function("Configure", configure);
+
+  // Reset actuator
+  setOpening("0");
 
   //Setup the Tinker application here
-
   //Register all the Tinker functions
   Particle.function("digitalread", tinkerDigitalRead);
   Particle.function("digitalwrite", tinkerDigitalWrite);
@@ -91,6 +166,10 @@ void setup()
 
   // Start DHT sensor
   dht.begin();
+
+  // Attach Controller functions
+  controller.setVentilator(&setVentilationPercentage);
+  controller.setIrrigator(&setIrrigationPercentage);
 }
 
 /* This function loops forever --------------------------------------------*/
@@ -98,13 +177,21 @@ void loop()
 {
   // Temperature, humidity and light measurement
   temperature = dht.getTempCelcius();
-  humidity = dht.getHumidity();
+  airHumidity = dht.getHumidity();
   light = lightValue();
 
   // Publish data
   Particle.publish("temperature", String(temperature) + " °C");
-  Particle.publish("humidity", String(humidity) + "%");
+  Particle.publish("airHumidity", String(airHumidity) + "%");
+  //Particle.publish("soilHumidity", String(soilHumidity) + "%");
   Particle.publish("light", String(light) + "%");
+
+  controller.setCurrentTemperature(temperature);
+  controller.setCurrentAirHumidity(airHumidity);
+  controller.setCurrentAirHumidity(soilHumidity);
+  controller.setCurrentLight(light);
+
+  controller.control();
 
   delay(10000);
 }
@@ -226,8 +313,4 @@ int tinkerAnalogWrite(String command)
 		return 1;
 	}
 	else return -2;
-}
-
-int lightValue() {
-  return (int)(analogRead(LIGHTPIN_IN) / 40.96);
 }
