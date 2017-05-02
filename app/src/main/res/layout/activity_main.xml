@@ -19,14 +19,16 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.285">
 
         <EditText
             android:id="@+id/editText5"
             android:layout_width="89dp"
             android:layout_height="32dp"
-            android:layout_marginLeft="64dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginTop="2dp"
             android:background="@null"
 
             android:focusable="false"
@@ -42,7 +44,7 @@
             android:layout_width="89dp"
             android:layout_height="32dp"
             android:layout_marginLeft="62dp"
-            android:layout_marginTop="56dp"
+            android:layout_marginTop="41dp"
             android:background="@null"
             android:ems="10"
             android:focusable="false"
@@ -57,8 +59,8 @@
             android:layout_width="89dp"
             android:layout_height="32dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginLeft="64dp"
-            android:layout_marginTop="96dp"
+            android:layout_marginLeft="61dp"
+            android:layout_marginTop="8dp"
             android:background="@null"
             android:ems="10"
             android:focusable="false"
@@ -67,8 +69,44 @@
             android:text="Temp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.084" />
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/editText11" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="89dp"
+            android:layout_height="32dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="textPersonName"
+            android:text="Lys%"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText12"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="89dp"
+            android:layout_height="32dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="textPersonName"
+            android:text="Åbent %"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText12"
+            app:layout_constraintVertical_bias="0.39" />
 
         <EditText
             android:id="@+id/currentAirFld"
@@ -80,11 +118,12 @@
             android:ems="10"
             android:inputType="none"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="2dp"
             android:layout_marginRight="8dp"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginLeft="8dp"
-            app:layout_constraintLeft_toRightOf="@+id/editText5" />
+            app:layout_constraintLeft_toRightOf="@+id/editText5"
+            app:layout_constraintHorizontal_bias="0.487" />
 
         <EditText
             android:id="@+id/currentSoilFld"
@@ -116,11 +155,51 @@
             android:focusableInTouchMode="false"
             android:inputType="none"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintHorizontal_bias="0.483"
             app:layout_constraintLeft_toRightOf="@+id/editText12"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/currentSoilFld"
-            app:layout_constraintVertical_bias="0.084" />
+            app:layout_constraintVertical_bias="0.0" />
+
+        <EditText
+            android:id="@+id/currentLightFld"
+            android:layout_width="88dp"
+            android:layout_height="32dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintLeft_toRightOf="@+id/editText12"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currentSoilFld"
+            app:layout_constraintVertical_bias="0.256" />
+
+        <EditText
+            android:id="@+id/currentServoFld"
+            android:layout_width="88dp"
+            android:layout_height="32dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintLeft_toRightOf="@+id/editText12"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currentSoilFld"
+            app:layout_constraintVertical_bias="0.537" />
 
         <Button
             android:id="@+id/water"
@@ -162,10 +241,6 @@
             android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toLeftOf="parent" />
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:background="#FF00FF00" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -175,38 +250,101 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="13dp"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent">
 
         <EditText
             android:id="@+id/waterFld"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="173dp"
+            android:layout_height="43dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Jordfugtighed dag?"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/waterFldNight"
+            app:layout_constraintTop_toBottomOf="@+id/humidityFld"
+            app:layout_constraintVertical_bias="0.157" />
+
+        <EditText
+            android:id="@+id/waterFldNight"
+            android:layout_width="173dp"
+            android:layout_height="43dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Jordfugtighed nat?"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/humidityFld"
+            app:layout_constraintVertical_bias="0.175" />
+
+        <EditText
+            android:id="@+id/tempFld"
+            android:layout_width="173dp"
+            android:layout_height="43dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="Vand?"
+            android:hint="Temperatur dag?"
             android:inputType="number"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/waterFld"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintRight_toLeftOf="@+id/tempFldNight"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp" />
+
+        <EditText
+            android:id="@+id/tempFldNight"
+            android:layout_width="173dp"
+            android:layout_height="43dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Temperatur nat?"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/humidityFld"
-            app:layout_constraintVertical_bias="0.137" />
+            app:layout_constraintTop_toBottomOf="@+id/waterFldNight" />
 
         <EditText
             android:id="@+id/humidityFld"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="173dp"
+            android:layout_height="43dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="Luftfugtighed?"
+            android:hint="Luftfugtighed dag?"
             android:inputType="number"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/send"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintRight_toLeftOf="@+id/humidityFldNight"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp" />
+
+        <EditText
+            android:id="@+id/humidityFldNight"
+            android:layout_width="173dp"
+            android:layout_height="43dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Luftfugtighed nat?"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/send"
             app:layout_constraintVertical_bias="0.0" />
