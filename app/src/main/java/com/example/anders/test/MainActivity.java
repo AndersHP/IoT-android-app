@@ -13,8 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.particle.android.sdk.cloud.ParticleCloud;
 import io.particle.android.sdk.cloud.ParticleCloudException;
@@ -23,24 +25,32 @@ import io.particle.android.sdk.cloud.ParticleDevice;
 import io.particle.android.sdk.cloud.models.DeviceStateChange;
 import io.particle.android.sdk.utils.Async;
 import io.particle.android.sdk.utils.Toaster;
+import io.particle.android.sdk.cloud.ParticleDevice.VariableType;
 
 
 
 public class MainActivity extends AppCompatActivity {
 
     private Button buttonClose, buttonOpen, buttonSend, buttonWater;
-    private EditText fldAir, fldSoil, currentAirFld, currentSoilFld, currentTempFld;
+    private EditText fldAir, fldSoil, currentAirFld, currentSoilFld, currentTempFld, currentServoFld, currentLightFld;
 
-    private final String particleUsername = "Anders.ahp@gmail.com";
-    private final String particlePw = "34283428";
-    private final String deviceId = "330042000247353138383138";
+    //private final String particleUsername = "Anders.ahp@gmail.com";
+    //private final String particlePw = "34283428";
+    //private final String deviceId = "330042000247353138383138";
+    private final String particleUsername = "peev.alexander@gmail.com";
+    private final String particlePw = "ParticleAlexander";
+    private final String deviceId = "340028000347343337373738";
+
+
 
     Activity thisActivity = this;
     private ParticleDevice device;
 
-    private int currentAirHumidity = -1;
-    private int currentSoilHumidity = -1;
-    private int currentTemp = -1;
+    private double currentServo = -1.0;
+    private double currentAirHumidity = -1.0;
+    private double currentSoilHumidity = -1.0;
+    private double currentTemp = -1.0;
+    private int currentLightValue = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         currentAirFld = (EditText) findViewById(R.id.currentAirFld);
         currentSoilFld = (EditText) findViewById(R.id.currentSoilFld);
         currentTempFld = (EditText) findViewById(R.id.currentTempFld);
+        currentServoFld = (EditText) findViewById(R.id.currentServoFld);
+        currentLightFld = (EditText) findViewById(R.id.currentLightFld);
 
         buttonOpen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -99,11 +111,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void openWindow(){
-        callFunctionOnDevice("openWindow",null);
+        callFunctionOnDevice("SetOpening","100");
     }
 
     void closeWindow(){
-        callFunctionOnDevice("closeWindow",null);
+        callFunctionOnDevice("SetOpening","0");
     }
 
     void waterPlant(){
@@ -115,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         String arg1 = fldAir.getText().toString();
         String arg2 = fldSoil.getText().toString();
 
-        callFunctionOnDevice("updateValues",arg1 + ":" + arg2);
+        callFunctionOnDevice("Configure",arg1 + ":" + arg2);
     }
 
     void callFunctionOnDevice(final String functionName, String arguments){
@@ -161,9 +173,12 @@ public class MainActivity extends AppCompatActivity {
                     throws ParticleCloudException, IOException  {
 
                 try{
-                    currentAirHumidity = particleDevice.getIntVariable("currAirHum");
-                    currentSoilHumidity = particleDevice.getIntVariable("currSoilHum");
-                    currentTemp = particleDevice.getIntVariable("currAirHum");
+
+                    currentServo = particleDevice.getDoubleVariable("GetOpening");
+                    currentAirHumidity = particleDevice.getDoubleVariable("GetHumidity");
+                    currentSoilHumidity = particleDevice.getDoubleVariable("GetSoil");
+                    currentTemp = particleDevice.getDoubleVariable("GetTemp");
+                    currentLightValue = particleDevice.getIntVariable("GetLight");
 
                 }catch (Exception e){
                     Log.e( "Failed to retrieve:",e.getMessage());
@@ -174,9 +189,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(Integer value) {
-                currentAirFld.setText("" + currentAirHumidity);
-                currentSoilFld.setText("" + currentSoilHumidity);
-                currentTempFld.setText("" + currentTemp);
+
+                currentAirFld.setText(String.format("%.2f", currentAirHumidity));
+                currentSoilFld.setText(String.format("%.2f", currentSoilHumidity));
+                currentTempFld.setText(String.format("%.2f", currentTemp) + "\u2103"); //"\u00b0" er grader tegn
+                currentLightFld.setText("" + currentLightValue);
+                currentServoFld.setText(String.format("%.2f",currentServo));
+
                 Toaster.s(thisActivity, "Current values retrieved!");
             }
 
