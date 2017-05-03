@@ -10,7 +10,9 @@ class DayModel : public Model {
 	void decideDesiredValues();
 
  private:
-  double lastAirHumidityError;
+  int calculateDelta(double current, double desired, double previous);
+  double lastTemperature;
+  double lastAirHumidity;
 };
 
 #endif /* DAY_MODEL_H */

@@ -25,7 +25,7 @@ class Model {
   int getDesiredIrrigation(void);
 
 protected:
-	double desiredTemperature = 23.0;
+	double desiredTemperature = 25.0;
 	double desiredAirHumidity = 60;
 	double desiredSoilHumidity = 50;
 

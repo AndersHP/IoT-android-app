@@ -10,7 +10,9 @@ class NightModel : public Model {
 	void decideDesiredValues();
 
  private:
-  double lastAirHumidityError;
+  int calculateDelta(double current, double desired, double previous);
+  double lastTemperature;
+  double lastAirHumidity;
 };
 
 #endif /* NIGHT_MODEL_H */
