@@ -1,3 +1,4 @@
+#include "application.h"
 #include "Model.h"
 
 #ifndef NIGHT_MODEL_H
@@ -7,6 +8,9 @@ class NightModel : public Model {
  public:
   NightModel();
 	void decideDesiredValues();
+
+ private:
+  double lastAirHumidityError;
 };
 
 #endif /* NIGHT_MODEL_H */

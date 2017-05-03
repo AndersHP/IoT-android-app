@@ -28,6 +28,13 @@ void Model::setCurrentLight(int light) {
   this->currentLight = light;
 }
 
+void Model::setCurrentVentilation(int ventilation) {
+  this->currentVentilation = ventilation;
+}
+void Model::setCurrentIrrigation(int irrigation) {
+  this->currentIrrigation = irrigation;
+}
+
 int Model::getDesiredVentilation(void) {
   return this->desiredVentilation;
 }

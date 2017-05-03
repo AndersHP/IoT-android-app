@@ -188,8 +188,10 @@ void loop()
 
   controller.setCurrentTemperature(temperature);
   controller.setCurrentAirHumidity(airHumidity);
-  controller.setCurrentAirHumidity(soilHumidity);
+  controller.setCurrentSoilHumidity(soilHumidity);
   controller.setCurrentLight(light);
+  controller.setCurrentVentilation(ventilation);
+  controller.setCurrentIrrigation(irrigation);
 
   controller.control();
 

@@ -17,6 +17,7 @@ class Controller {
   void setDesiredDayAirHumidity(double dayAirHumidity);
   void setDesiredDaySoilHumidity(double daySoilHumidity);
   void setDesiredDayTemperature(double dayTemperature);
+  
   void setDesiredNightAirHumidity(double nightAirHumidity);
   void setDesiredNightSoilHumidity(double nightSoilHumidity);
   void setDesiredNightTemperature(double nightTemperature);
@@ -25,6 +26,9 @@ class Controller {
   void setCurrentAirHumidity(double airHumidity);
   void setCurrentSoilHumidity(double soilHumidity);
   void setCurrentLight(int light);
+
+  void setCurrentVentilation(int ventilation);
+  void setCurrentIrrigation(int irrigation);
 
 	void control(void);
 

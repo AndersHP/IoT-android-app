@@ -16,20 +16,26 @@ class Model {
   void setCurrentSoilHumidity(double soilHumidity);
   void setCurrentLight(int light);
 
+  void setCurrentVentilation(int ventilation);
+  void setCurrentIrrigation(int irrigation);
+
 	virtual void decideDesiredValues() = 0;
 
   int getDesiredVentilation(void);
   int getDesiredIrrigation(void);
 
 protected:
-	double desiredTemperature;
-	double desiredAirHumidity;
-	double desiredSoilHumidity;
-	
+	double desiredTemperature = 23.0;
+	double desiredAirHumidity = 60;
+	double desiredSoilHumidity = 50;
+
 	double currentTemperature;
 	double currentAirHumidity;
 	double currentSoilHumidity;
 	int currentLight;
+
+  int currentVentilation;
+  int currentIrrigation;
 
 	int desiredVentilation;
 	int desiredIrrigation;
