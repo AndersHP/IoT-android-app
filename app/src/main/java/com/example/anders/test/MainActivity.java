@@ -32,7 +32,7 @@ import io.particle.android.sdk.cloud.ParticleDevice.VariableType;
 public class MainActivity extends AppCompatActivity {
 
     private Button buttonClose, buttonOpen, buttonSend, buttonWater;
-    private EditText fldAir, fldSoil, currentAirFld, currentSoilFld, currentTempFld, currentServoFld, currentLightFld;
+    private EditText fldAir, fldSoil, fldTemp, fldAirNight, fldSoilNight, fldTempNight, currentAirFld, currentSoilFld, currentTempFld, currentServoFld, currentLightFld;
 
     //private final String particleUsername = "Anders.ahp@gmail.com";
     //private final String particlePw = "34283428";
@@ -61,8 +61,14 @@ public class MainActivity extends AppCompatActivity {
         buttonOpen = (Button) findViewById(R.id.open);
         buttonSend = (Button) findViewById(R.id.send);
         buttonWater = (Button) findViewById(R.id.water);
+
         fldAir = (EditText) findViewById(R.id.humidityFld);
         fldSoil = (EditText) findViewById(R.id.waterFld);
+        fldTemp = (EditText) findViewById(R.id.tempFld);
+        fldAirNight = (EditText) findViewById(R.id.humidityFldNight);
+        fldSoilNight = (EditText) findViewById(R.id.waterFldNight);
+        fldTempNight = (EditText) findViewById(R.id.tempFldNight);
+
         currentAirFld = (EditText) findViewById(R.id.currentAirFld);
         currentSoilFld = (EditText) findViewById(R.id.currentSoilFld);
         currentTempFld = (EditText) findViewById(R.id.currentTempFld);
@@ -81,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         });
         buttonSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                sendDataToPhoton();
+                configurePhoton();
             }
         });
         buttonWater.setOnClickListener(new View.OnClickListener() {
@@ -123,11 +129,16 @@ public class MainActivity extends AppCompatActivity {
        // callFunctionOnDevice("waterSoil",null);
     }
 
-    void sendDataToPhoton(){
-        String arg1 = fldAir.getText().toString();
-        String arg2 = fldSoil.getText().toString();
+    void configurePhoton(){
+        String desiredAirHum = fldAir.getText().toString();
+        String desiredSoilHum = fldSoil.getText().toString();
+        String desiredTemp = fldTemp.getText().toString();
 
-        callFunctionOnDevice("Configure",arg1 + ":" + arg2);
+        String desiredAirHumNight = fldAirNight.getText().toString();
+        String desiredSoilHumNight = fldSoilNight.getText().toString();
+        String desiredTempNight = fldTempNight.getText().toString();
+
+        callFunctionOnDevice("Configure",desiredAirHum + ":" + desiredSoilHum + ":" + desiredTemp + ":" + desiredAirHumNight + ":" + desiredSoilHumNight + ":" + desiredTempNight);
     }
 
     void callFunctionOnDevice(final String functionName, String arguments){
