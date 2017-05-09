@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void waterPlant(){
-       // callFunctionOnDevice("waterSoil",null);
+        callFunctionOnDevice("Irrigate",null);
     }
 
     void configurePhoton(){
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void getCurrentValues(){
+    void getCurrentValuesFromDevice(){
         Async.executeAsync(device, new Async.ApiWork<ParticleDevice, Integer>() {
 
             public Integer callApi(ParticleDevice particleDevice)
@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
     class UpdateGui extends TimerTask {
         public void run() {
-            getCurrentValues();
+            getCurrentValuesFromDevice();
         }
     }
 }
