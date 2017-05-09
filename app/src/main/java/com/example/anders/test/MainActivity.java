@@ -31,7 +31,7 @@ import io.particle.android.sdk.cloud.ParticleDevice.VariableType;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button buttonClose, buttonOpen, buttonSend, buttonWater;
+    private Button buttonClose, buttonOpen, buttonSend, buttonWater, buttonUpdate;
     private EditText fldAir, fldSoil, fldTemp, fldAirNight, fldSoilNight, fldTempNight, currentAirFld, currentSoilFld, currentTempFld, currentServoFld, currentLightFld;
 
     //private final String particleUsername = "Anders.ahp@gmail.com";
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         buttonOpen = (Button) findViewById(R.id.open);
         buttonSend = (Button) findViewById(R.id.send);
         buttonWater = (Button) findViewById(R.id.water);
+        buttonUpdate = (Button) findViewById(R.id.update);
 
         fldAir = (EditText) findViewById(R.id.humidityFld);
         fldSoil = (EditText) findViewById(R.id.waterFld);
@@ -95,6 +96,10 @@ public class MainActivity extends AppCompatActivity {
                 waterPlant();
             }
         });
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { getCurrentValues();
+            }
+        });
 
         // Login to cloud when starting the app
         ParticleCloudSDK.init(getApplicationContext());
@@ -125,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void waterPlant(){
-        getCurrentValues();
        // callFunctionOnDevice("waterSoil",null);
     }
 
