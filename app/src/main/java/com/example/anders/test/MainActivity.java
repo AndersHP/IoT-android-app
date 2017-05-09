@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.particle.android.sdk.cloud.ParticleCloud;
 import io.particle.android.sdk.cloud.ParticleCloudException;
@@ -34,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonClose, buttonOpen, buttonSend, buttonWater;
     private EditText fldAir, fldSoil, fldTemp, fldAirNight, fldSoilNight, fldTempNight, currentAirFld, currentSoilFld, currentTempFld, currentServoFld, currentLightFld;
 
-    //private final String particleUsername = "Anders.ahp@gmail.com";
+    Timer timer = new Timer();
+
+    //private final Stri    ng particleUsername = "Anders.ahp@gmail.com";
     //private final String particlePw = "34283428";
     //private final String deviceId = "330042000247353138383138";
     private final String particleUsername = "peev.alexander@gmail.com";
@@ -114,6 +118,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
+
+        // Start thread to update with current values
+        UpdateGui updateGuiThread = new UpdateGui();
+        timer.scheduleAtFixedRate(updateGuiThread,5000,10000);
+
     }
 
     void openWindow(){
@@ -125,8 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void waterPlant(){
-        getCurrentValues();
-       // callFunctionOnDevice("waterSoil",null);
+        callFunctionOnDevice("Irrigate",null);
     }
 
     void configurePhoton(){
@@ -177,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void getCurrentValues(){
+    void getCurrentValuesFromDevice(){
         Async.executeAsync(device, new Async.ApiWork<ParticleDevice, Integer>() {
 
             public Integer callApi(ParticleDevice particleDevice)
@@ -217,4 +225,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    class UpdateGui extends TimerTask {
+        public void run() {
+            getCurrentValuesFromDevice();
+        }
+    }
 }
+
