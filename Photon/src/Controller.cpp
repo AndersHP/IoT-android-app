@@ -60,6 +60,15 @@ void Controller::setCurrentLight(int light) {
   }
 }
 
+void Controller::setCurrentVentilation(int ventilation) {
+  this->dayModel.setCurrentVentilation(ventilation);
+  this->nightModel.setCurrentVentilation(ventilation);
+}
+void Controller::setCurrentIrrigation(int irrigation) {
+  this->dayModel.setCurrentIrrigation(irrigation);
+  this->nightModel.setCurrentIrrigation(irrigation);
+}
+
 void Controller::control(void) {
   this->currentModel->decideDesiredValues();
   (*this->ventilate)(this->currentModel->getDesiredVentilation());
