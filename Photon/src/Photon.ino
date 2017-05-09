@@ -67,7 +67,7 @@ void setVentilationPercentage(int percentage) {
    else if(ventilation < 0) {
      ventilation = 0;
    }
-   Particle.publish("Ventilating!", String(ventilation) + "%");
+   Particle.publish("Ventilating!", String(ventilation));
    ventilator.write(ventilation + 40);
 }
 
@@ -133,6 +133,16 @@ int configure(String configuration) {
   return 0;
 }
 
+int logKnownWiFi(String command) {
+    WiFiAccessPoint ap[5];
+    int found = WiFi.getCredentials(ap, 5);
+    String ssids = "";
+    for (int i = 0; i < found; i++) {
+        ssids += String(ap[i].ssid) + " ";
+    }
+    Particle.publish("all-wifi-ssids", ssids);
+}
+
 /* Function prototypes -------------------------------------------------------*/
 int tinkerDigitalRead(String pin);
 int tinkerDigitalWrite(String command);
@@ -165,6 +175,7 @@ void setup()
   Particle.function("SetOpening", setOpening);
   Particle.function("Irrigate", irrigate);
   Particle.function("Configure", configure);
+  Particle.function("LogWifi", logKnownWiFi);
 
   // Reset actuator
   setOpening("0");
@@ -187,13 +198,6 @@ void setup()
 /* This function loops forever --------------------------------------------*/
 void loop()
 {
-  WiFiAccessPoint ap[5];
-  int found = WiFi.getCredentials(ap, 5);
-  String ssids = "";
-  for (int i = 0; i < found; i++) {
-      ssids += String(ap[i].ssid) + " ";
-  }
-  Particle.publish("all-wifi-ssids", ssids);
   // Temperature, humidity and light measurement
   temperature = dht.getTempCelcius();
   airHumidity = dht.getHumidity();
@@ -201,10 +205,10 @@ void loop()
   light = lightValue();
 
   // Publish data
-  Particle.publish("temperature", String(temperature) + " °C");
-  Particle.publish("airHumidity", String(airHumidity) + "%");
-  Particle.publish("soilHumidity", String(soilHumidity) + "%");
-  Particle.publish("light", String(light) + "%");
+  Particle.publish("temperature", String(temperature));
+  Particle.publish("airHumidity", String(airHumidity));
+  Particle.publish("soilHumidity", String(soilHumidity));
+  Particle.publish("light", String(light));
 
   controller.setCurrentTemperature(temperature);
   controller.setCurrentAirHumidity(airHumidity);

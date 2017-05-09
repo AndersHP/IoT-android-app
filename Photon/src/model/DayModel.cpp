@@ -25,5 +25,5 @@ void DayModel::decideDesiredValues(void) {
 
   lastTemperature = currentTemperature;
   lastAirHumidity = currentAirHumidity;
-  Particle.publish("DayModel::decideDesiredValues", String((double)currentVentilation, 2) + " -> " + String((double)desiredVentilation, 2) + "; T:" + String((double)temperatureDelta, 2) + " : H:" + String((double)airHumidityDelta, 2));
+  Particle.publish("DayModel::decideDesiredValues");
 }
