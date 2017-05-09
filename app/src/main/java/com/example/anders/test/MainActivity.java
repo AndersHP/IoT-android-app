@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonClose, buttonOpen, buttonSend, buttonWater, buttonUpdate;
     private EditText fldAir, fldSoil, fldTemp, fldAirNight, fldSoilNight, fldTempNight, currentAirFld, currentSoilFld, currentTempFld, currentServoFld, currentLightFld;
 
-    //private final String particleUsername = "Anders.ahp@gmail.com";
+    //private final Stri    ng particleUsername = "Anders.ahp@gmail.com";
     //private final String particlePw = "34283428";
     //private final String deviceId = "330042000247353138383138";
     private final String particleUsername = "peev.alexander@gmail.com";
