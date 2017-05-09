@@ -9,12 +9,18 @@
 #include <Adafruit_DHT.h>
 
 #include "Controller.h"
+#include "SoilHumiditySensor.h"
+#include "Irrigator.h"
 
 // LED parameters
 #define LEDPIN D7
 
+// Irrigation parameters
+#define WATERPIN_OUT D2
+#define WATERPIN_POWER D3
+
 // Actuator parameters
-#define ACTUATORPIN A4
+#define VENTILATORPIN A4
 
 // Light parameters
 #define LIGHTPIN_IN A0
@@ -24,6 +30,10 @@
 #define DHTPIN D5
 #define DHTTYPE AM2301
 
+// DHT parameters
+#define SOIL_IN A1
+#define SOIL_POWER D1
+
 // Sensor Input Variables
 double temperature;
 double airHumidity;
@@ -32,16 +42,18 @@ int light;
 
 // Outputs
 int ventilation = 0;
-int irrigation = 0;
 
 // DHT sensor
 DHT dht(DHTPIN, DHTTYPE);
 
-// Ventilation Actuator
-Servo myServo;
+// Soil humidity sensor
+SoilHumiditySensor soilHumiditySensor(SOIL_POWER, SOIL_IN);
 
-// Water Flow Controller
-// TODO implement hardware reader
+// Irrigation motor
+Irrigator irrigator(WATERPIN_POWER, WATERPIN_OUT);
+
+// Ventilation Actuator
+Servo ventilator;
 
 // App Logic Controller
 Controller controller;
@@ -55,26 +67,25 @@ void setVentilationPercentage(int percentage) {
    else if(ventilation < 0) {
      ventilation = 0;
    }
-   myServo.write(ventilation + 40);
-   Particle.publish("Ventilation: %i%% \n", ventilation);
-}
-
-void setIrrigationPercentage(int percentage) {
-   irrigation = percentage;
-   if(irrigation > 100) {
-     irrigation = 100;
-   }
-   else if(irrigation < 0) {
-     irrigation = 0;
-   }
-  // TODO implement irrigation
-  Particle.publish("Irrigation: %i%% \n", irrigation);
+   Particle.publish("Ventilating!", String(ventilation) + "%");
+   ventilator.write(ventilation + 40);
 }
 
 int setOpening(String command) {
    setVentilationPercentage(command.toInt());
    blinkLed();
    return ventilation;
+}
+
+
+void doIrrigation(void) {
+   Particle.publish("Irrigating!");
+   irrigator.irrigate();
+}
+
+int irrigate(String command) {
+   doIrrigation();
+   return 0;
 }
 
 void blinkLed() {
@@ -137,7 +148,7 @@ void setup()
   pinMode(LEDPIN, OUTPUT);
 
   // Setup Actuator
-  myServo.attach(ACTUATORPIN);
+  ventilator.attach(VENTILATORPIN);
 
   // Setup Light Sensor
   pinMode(LIGHTPIN_IN,INPUT);
@@ -152,6 +163,7 @@ void setup()
   Particle.variable("GetSoil", &soilHumidity, DOUBLE);
   Particle.variable("GetLight", &light, INT);
   Particle.function("SetOpening", setOpening);
+  Particle.function("Irrigate", irrigate);
   Particle.function("Configure", configure);
 
   // Reset actuator
@@ -169,21 +181,29 @@ void setup()
 
   // Attach Controller functions
   controller.setVentilator(&setVentilationPercentage);
-  controller.setIrrigator(&setIrrigationPercentage);
+  controller.setIrrigator(&doIrrigation);
 }
 
 /* This function loops forever --------------------------------------------*/
 void loop()
 {
+  WiFiAccessPoint ap[5];
+  int found = WiFi.getCredentials(ap, 5);
+  String ssids = "";
+  for (int i = 0; i < found; i++) {
+      ssids += String(ap[i].ssid) + " ";
+  }
+  Particle.publish("all-wifi-ssids", ssids);
   // Temperature, humidity and light measurement
   temperature = dht.getTempCelcius();
   airHumidity = dht.getHumidity();
+  soilHumidity = soilHumiditySensor.getCurrentSoilHumidity();
   light = lightValue();
 
   // Publish data
   Particle.publish("temperature", String(temperature) + " °C");
   Particle.publish("airHumidity", String(airHumidity) + "%");
-  //Particle.publish("soilHumidity", String(soilHumidity) + "%");
+  Particle.publish("soilHumidity", String(soilHumidity) + "%");
   Particle.publish("light", String(light) + "%");
 
   controller.setCurrentTemperature(temperature);
@@ -191,7 +211,6 @@ void loop()
   controller.setCurrentSoilHumidity(soilHumidity);
   controller.setCurrentLight(light);
   controller.setCurrentVentilation(ventilation);
-  controller.setCurrentIrrigation(irrigation);
 
   controller.control();
 

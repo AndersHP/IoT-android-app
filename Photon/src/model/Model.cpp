@@ -2,7 +2,7 @@
 
 Model::Model() {
   this->desiredVentilation = 0;
-  this->desiredIrrigation = 0;
+  this->desiredIrrigation = false;
 }
 
 void Model::setDesiredTemperature(double temperature) {
@@ -31,13 +31,10 @@ void Model::setCurrentLight(int light) {
 void Model::setCurrentVentilation(int ventilation) {
   this->currentVentilation = ventilation;
 }
-void Model::setCurrentIrrigation(int irrigation) {
-  this->currentIrrigation = irrigation;
-}
 
 int Model::getDesiredVentilation(void) {
   return this->desiredVentilation;
 }
-int Model::getDesiredIrrigation(void) {
+bool Model::getDesiredIrrigation(void) {
   return this->desiredIrrigation;
 }

@@ -7,12 +7,13 @@
 Controller::Controller() {
   this->currentModel = &this->dayModel;
   this->maximumNightLightValue = 5;
+  this->iterationsSinceLastIrrigation = 0;
 }
 
 void Controller::setVentilator(void(*ventilate)(int)) {
   this->ventilate = ventilate;
 }
-void Controller::setIrrigator(void(*irrigate)(int)) {
+void Controller::setIrrigator(void(*irrigate)(void)) {
   this->irrigate = irrigate;
 }
 
@@ -64,13 +65,15 @@ void Controller::setCurrentVentilation(int ventilation) {
   this->dayModel.setCurrentVentilation(ventilation);
   this->nightModel.setCurrentVentilation(ventilation);
 }
-void Controller::setCurrentIrrigation(int irrigation) {
-  this->dayModel.setCurrentIrrigation(irrigation);
-  this->nightModel.setCurrentIrrigation(irrigation);
-}
 
 void Controller::control(void) {
   this->currentModel->decideDesiredValues();
   (*this->ventilate)(this->currentModel->getDesiredVentilation());
-  (*this->irrigate)(this->currentModel->getDesiredIrrigation());
+  if(this->currentModel->getDesiredIrrigation() && this->iterationsSinceLastIrrigation > 30) {
+    (*this->irrigate)();
+    this->iterationsSinceLastIrrigation = 0;
+  }
+  else {
+    this->iterationsSinceLastIrrigation += 1;
+  }
 }

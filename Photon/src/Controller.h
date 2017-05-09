@@ -12,12 +12,12 @@ class Controller {
   Controller();
 
 	void setVentilator(void(*ventilate)(int));
-	void setIrrigator(void(*irrigate)(int));
+	void setIrrigator(void(*irrigate)(void));
 
   void setDesiredDayAirHumidity(double dayAirHumidity);
   void setDesiredDaySoilHumidity(double daySoilHumidity);
   void setDesiredDayTemperature(double dayTemperature);
-  
+
   void setDesiredNightAirHumidity(double nightAirHumidity);
   void setDesiredNightSoilHumidity(double nightSoilHumidity);
   void setDesiredNightTemperature(double nightTemperature);
@@ -28,17 +28,17 @@ class Controller {
   void setCurrentLight(int light);
 
   void setCurrentVentilation(int ventilation);
-  void setCurrentIrrigation(int irrigation);
 
 	void control(void);
 
 private:
 	void(*ventilate)(int);
-	void(*irrigate)(int);
+	void(*irrigate)(void);
 	DayModel dayModel;
 	NightModel nightModel;
 	Model* currentModel;
 	int maximumNightLightValue;
+  int iterationsSinceLastIrrigation;
 };
 
 #endif /* CONTROLLER_H */

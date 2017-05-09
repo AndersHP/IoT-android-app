@@ -22,7 +22,7 @@ class Model {
 	virtual void decideDesiredValues() = 0;
 
   int getDesiredVentilation(void);
-  int getDesiredIrrigation(void);
+  bool getDesiredIrrigation(void);
 
 protected:
 	double desiredTemperature = 25.0;
@@ -35,10 +35,9 @@ protected:
 	int currentLight;
 
   int currentVentilation;
-  int currentIrrigation;
 
 	int desiredVentilation;
-	int desiredIrrigation;
+	bool desiredIrrigation;
 };
 
 #endif /* MODEL_H */

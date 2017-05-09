@@ -21,7 +21,7 @@ void DayModel::decideDesiredValues(void) {
 
   desiredVentilation = currentVentilation + temperatureDelta + airHumidityDelta;
 
-  // TODO desiredIrrigation
+  desiredIrrigation = desiredSoilHumidity > currentSoilHumidity + 10;
 
   lastTemperature = currentTemperature;
   lastAirHumidity = currentAirHumidity;
