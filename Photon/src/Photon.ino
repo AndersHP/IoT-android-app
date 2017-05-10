@@ -40,8 +40,12 @@ double airHumidity;
 double soilHumidity;
 int light;
 
+// Overrides
+int disabled = 0;
+
 // Outputs
 int ventilation = 0;
+int irrigation = 0;
 
 // DHT sensor
 DHT dht(DHTPIN, DHTTYPE);
@@ -77,14 +81,21 @@ int setOpening(String command) {
    return ventilation;
 }
 
+int setDisabled(String command) {
+  disabled = command.toInt();
+  blinkLed();
+  return disabled;
+}
 
 void doIrrigation(void) {
-   Particle.publish("Irrigating!");
+   Particle.publish("Irrigating!", "now");
    irrigator.irrigate();
+   irrigation = 10;
 }
 
 int irrigate(String command) {
    doIrrigation();
+   blinkLed();
    return 0;
 }
 
@@ -130,6 +141,8 @@ int configure(String configuration) {
   controller.setDesiredNightSoilHumidity(nightSoilHumidity);
   controller.setDesiredNightTemperature(nightTemperature);
 
+  blinkLed();
+
   return 0;
 }
 
@@ -141,6 +154,10 @@ int logKnownWiFi(String command) {
         ssids += String(ap[i].ssid) + " ";
     }
     Particle.publish("all-wifi-ssids", ssids);
+
+    blinkLed();
+
+    return found;
 }
 
 /* Function prototypes -------------------------------------------------------*/
@@ -168,10 +185,13 @@ void setup()
   digitalWrite(LIGHTPIN_POWER,HIGH);
 
   Particle.variable("GetOpening", &ventilation, INT);
+  Particle.variable("GetWatered", &irrigation, INT);
   Particle.variable("GetTemp", &temperature, DOUBLE);
   Particle.variable("GetHumidity", &airHumidity, DOUBLE);
   Particle.variable("GetSoil", &soilHumidity, DOUBLE);
   Particle.variable("GetLight", &light, INT);
+  Particle.variable("GetDisabled", &disabled, INT);
+  Particle.function("SetDisabled", setDisabled);
   Particle.function("SetOpening", setOpening);
   Particle.function("Irrigate", irrigate);
   Particle.function("Configure", configure);
@@ -198,11 +218,25 @@ void setup()
 /* This function loops forever --------------------------------------------*/
 void loop()
 {
+  // Keep cloud connection alive
+  Particle.process();
+
+  // We haven't irrigated yet on this iteration - incremental cooldown
+  if(irrigation > 0) {
+    irrigation -= 1;
+  }
+  else if(irrigation < 0) {
+    irrigation = 0;
+  }
+
   // Temperature, humidity and light measurement
   temperature = dht.getTempCelcius();
   airHumidity = dht.getHumidity();
   soilHumidity = soilHumiditySensor.getCurrentSoilHumidity();
   light = lightValue();
+
+  // Keep cloud connection alive
+  Particle.process();
 
   // Publish data
   Particle.publish("temperature", String(temperature));
@@ -216,7 +250,12 @@ void loop()
   controller.setCurrentLight(light);
   controller.setCurrentVentilation(ventilation);
 
-  controller.control();
+  // Keep cloud connection alive
+  Particle.process();
+
+  if(disabled == 0) {
+    controller.control();
+  }
 
   delay(10000);
 }

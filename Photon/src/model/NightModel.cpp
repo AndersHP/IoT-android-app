@@ -25,5 +25,6 @@ void NightModel::decideDesiredValues(void) {
 
   lastTemperature = currentTemperature;
   lastAirHumidity = currentAirHumidity;
-  Particle.publish("NightModel::decideDesiredValues");
+
+  Particle.publish("model-used", "NightModel");
 }
