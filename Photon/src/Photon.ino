@@ -213,6 +213,14 @@ void setup()
   // Attach Controller functions
   controller.setVentilator(&setVentilationPercentage);
   controller.setIrrigator(&doIrrigation);
+
+  // Default desired values
+  controller.setDesiredDayAirHumidity(70);
+  controller.setDesiredDaySoilHumidity(50);
+  controller.setDesiredDayTemperature(25);
+  controller.setDesiredNightAirHumidity(70);
+  controller.setDesiredNightSoilHumidity(50);
+  controller.setDesiredNightTemperature(20);
 }
 
 /* This function loops forever --------------------------------------------*/
@@ -257,7 +265,7 @@ void loop()
     controller.control();
   }
 
-  delay(10000);
+  delay(60000);
 }
 
 /*******************************************************************************

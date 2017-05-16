@@ -69,7 +69,7 @@ void Controller::setCurrentVentilation(int ventilation) {
 void Controller::control(void) {
   this->currentModel->decideDesiredValues();
   (*this->ventilate)(this->currentModel->getDesiredVentilation());
-  if(this->currentModel->getDesiredIrrigation() && this->iterationsSinceLastIrrigation > 30) {
+  if(this->currentModel->getDesiredIrrigation() && this->iterationsSinceLastIrrigation > 10) {
     (*this->irrigate)();
     this->iterationsSinceLastIrrigation = 0;
   }

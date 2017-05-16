@@ -26,8 +26,8 @@ class Model {
 
 protected:
 	double desiredTemperature = 25.0;
-	double desiredAirHumidity = 60;
-	double desiredSoilHumidity = 50;
+	double desiredAirHumidity = 55;
+	double desiredSoilHumidity = 55;
 
 	double currentTemperature;
 	double currentAirHumidity;
